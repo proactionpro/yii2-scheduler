@@ -5,6 +5,7 @@ namespace webtoolsnz\scheduler;
 
 use webtoolsnz\scheduler\events\TaskEvent;
 use webtoolsnz\scheduler\models\SchedulerTask;
+use yii\base\Component;
 use yii\helpers\StringHelper;
 use Cron\CronExpression;
 
@@ -12,7 +13,7 @@ use Cron\CronExpression;
  * Class Task
  * @package webtoolsnz\scheduler
  */
-abstract class Task extends \yii\base\Component
+abstract class Task extends Component
 {
     const EVENT_BEFORE_RUN = 'TaskBeforeRun';
     const EVENT_AFTER_RUN = 'TaskAfterRun';
