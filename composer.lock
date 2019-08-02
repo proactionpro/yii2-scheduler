@@ -713,16 +713,16 @@
             "time": "2016-09-02 01:57:56"
         },
         {
-            "name": "proactionpro/yii2-widgets",
+            "name": "webtoolsnz/yii2-widgets",
             "version": "0.2.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/proactionpro/yii2-widgets.git",
+                "url": "https://github.com/webtoolsnz/yii2-widgets.git",
                 "reference": "7832082b30b34862a8bc4dd40ecfe942cc40b536"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/proactionpro/yii2-widgets/zipball/7832082b30b34862a8bc4dd40ecfe942cc40b536",
+                "url": "https://api.github.com/repos/webtoolsnz/yii2-widgets/zipball/7832082b30b34862a8bc4dd40ecfe942cc40b536",
                 "reference": "7832082b30b34862a8bc4dd40ecfe942cc40b536",
                 "shasum": ""
             },
@@ -770,7 +770,7 @@
                 }
             ],
             "description": "A Yii2 widgets library by Webtools",
-            "homepage": "https://github.com/proactionpro/yii2-widgets",
+            "homepage": "https://github.com/webtoolsnz/yii2-widgets",
             "keywords": [
                 "currency",
                 "datepicker",
