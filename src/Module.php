@@ -23,7 +23,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * Namespace that tasks use.
      * @var string
      */
-    public $taskNameSpace = 'app\tasks';
+    public $taskNameSpace = 'app\models\cronTasks';
 
     /**
      * Bootstrap the console controllers.
