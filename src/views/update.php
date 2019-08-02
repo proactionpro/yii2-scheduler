@@ -10,7 +10,7 @@ use yii\helpers\Html;
 use proactionpro\scheduler\models\SchedulerTask;
 use yii\bootstrap\Tabs;
 use yii\bootstrap\ActiveForm;
-use proactionpro\widgets\RadioButtonGroup;
+use webtoolsnz\widgets\RadioButtonGroup;
 use yii\grid\GridView;
 
 
