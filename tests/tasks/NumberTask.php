@@ -1,7 +1,7 @@
 <?php
-namespace webtoolsnz\scheduler\tests\tasks;
+namespace proactionpro\scheduler\tests\tasks;
 
-class NumberTask extends \webtoolsnz\scheduler\Task
+class NumberTask extends \proactionpro\scheduler\Task
 {
     public $description = 'Prints the numbers from 0 to 100';
     public $schedule = '*/1 * * * *';

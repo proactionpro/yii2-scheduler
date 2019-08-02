@@ -20,7 +20,7 @@
   "require": {
     "yiisoft/yii2": "^2.0.9",
     "mtdowling/cron-expression": "~1.0",
-    "webtoolsnz/yii2-widgets": "*"
+    "proactionpro/yii2-widgets": "*"
   },
   "require-dev": {
     "guzzlehttp/guzzle": "~5.0|~4.0",
@@ -32,8 +32,8 @@
   },
   "autoload": {
     "psr-4": {
-      "webtoolsnz\\scheduler\\": "src",
-      "webtoolsnz\\scheduler\\tests\\": "tests"
+      "proactionpro\\scheduler\\": "src",
+      "proactionpro\\scheduler\\tests\\": "tests"
     }
   }
 }

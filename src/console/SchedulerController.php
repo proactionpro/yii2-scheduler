@@ -1,12 +1,12 @@
 <?php
 
-namespace webtoolsnz\scheduler\console;
+namespace proactionpro\scheduler\console;
 
-use webtoolsnz\scheduler\events\SchedulerEvent;
-use webtoolsnz\scheduler\models\base\SchedulerLog;
-use webtoolsnz\scheduler\models\SchedulerTask;
-use webtoolsnz\scheduler\Task;
-use webtoolsnz\scheduler\TaskRunner;
+use proactionpro\scheduler\events\SchedulerEvent;
+use proactionpro\scheduler\models\base\SchedulerLog;
+use proactionpro\scheduler\models\SchedulerTask;
+use proactionpro\scheduler\Task;
+use proactionpro\scheduler\TaskRunner;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\console\Controller;
@@ -71,7 +71,7 @@ class SchedulerController extends Controller
     }
 
     /**
-     * @return \webtoolsnz\scheduler\Module
+     * @return \proactionpro\scheduler\Module
      */
     private function getScheduler()
     {

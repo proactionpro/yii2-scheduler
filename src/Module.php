@@ -1,15 +1,15 @@
 <?php
-namespace webtoolsnz\scheduler;
+namespace proactionpro\scheduler;
 
-use webtoolsnz\scheduler\models\SchedulerLog;
+use proactionpro\scheduler\models\SchedulerLog;
 use Yii;
 use yii\base\BootstrapInterface;
-use webtoolsnz\scheduler\models\SchedulerTask;
+use proactionpro\scheduler\models\SchedulerTask;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class Module
- * @package webtoolsnz\scheduler
+ * @package proactionpro\scheduler
  */
 class Module extends \yii\base\Module implements BootstrapInterface
 {
@@ -35,7 +35,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
         if ($app instanceof \yii\console\Application && !isset($app->controllerMap[$this->id])) {
             $app->controllerMap[$this->id] = [
-                'class' => 'webtoolsnz\scheduler\console\SchedulerController',
+                'class' => 'proactionpro\scheduler\console\SchedulerController',
             ];
         }
     }

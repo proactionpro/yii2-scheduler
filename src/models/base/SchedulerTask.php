@@ -1,6 +1,6 @@
 <?php
 
-namespace webtoolsnz\scheduler\models\base;
+namespace proactionpro\scheduler\models\base;
 
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -18,7 +18,7 @@ use yii\data\ActiveDataProvider;
  * @property string $next_run
  * @property integer $active
  *
- * @property \webtoolsnz\scheduler\models\SchedulerLog[] $schedulerLogs
+ * @property \proactionpro\scheduler\models\SchedulerLog[] $schedulerLogs
  */
 class SchedulerTask extends \yii\db\ActiveRecord
 {
@@ -84,7 +84,7 @@ class SchedulerTask extends \yii\db\ActiveRecord
      */
     public function getSchedulerLogs()
     {
-        return $this->hasMany(\webtoolsnz\scheduler\models\SchedulerLog::className(), ['scheduled_task_id' => 'id']);
+        return $this->hasMany(\proactionpro\scheduler\models\SchedulerLog::className(), ['scheduled_task_id' => 'id']);
     }
 
     /**
