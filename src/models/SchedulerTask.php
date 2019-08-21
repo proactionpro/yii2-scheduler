@@ -10,23 +10,23 @@ use yii\helpers\Inflector;
  */
 class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
 {
-    const STATUS_INACTIVE = 0;
-    const STATUS_PENDING = 10;
-    const STATUS_DUE = 20;
-    const STATUS_RUNNING = 30;
-    const STATUS_OVERDUE = 40;
-    const STATUS_ERROR = 50;
+    public const STATUS_INACTIVE = 0;
+    public const STATUS_PENDING = 10;
+    public const STATUS_DUE = 20;
+    public const STATUS_RUNNING = 30;
+    public const STATUS_OVERDUE = 40;
+    public const STATUS_ERROR = 50;
 
     /**
      * @var array
      */
-    private static $_statuses = [
+    public const STATUSES = [
         self::STATUS_INACTIVE => 'Inactive',
-        self::STATUS_PENDING => 'Pending',
-        self::STATUS_DUE => 'Due',
-        self::STATUS_RUNNING => 'Running',
-        self::STATUS_OVERDUE => 'Overdue',
-        self::STATUS_ERROR => 'Error',
+        self::STATUS_PENDING  => 'Pending',
+        self::STATUS_DUE      => 'Due',
+        self::STATUS_RUNNING  => 'Running',
+        self::STATUS_OVERDUE  => 'Overdue',
+        self::STATUS_ERROR    => 'Error',
     ];
 
     /**
@@ -69,7 +69,7 @@ class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
      */
     public function getStatus()
     {
-        return isset(self::$_statuses[$this->status_id]) ? self::$_statuses[$this->status_id] : null;
+        return isset(self::STATUSES[$this->status_id]) ? self::STATUSES[$this->status_id] : null;
     }
 
 
