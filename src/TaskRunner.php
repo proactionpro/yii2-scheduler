@@ -92,7 +92,9 @@ class TaskRunner extends \yii\base\Component
                     $this->shutdownHandler();
                     $task->run();
                     $this->running = false;
-                    $output = ob_get_clean();
+                    if ($output = ob_get_contents()) {
+                        ob_get_clean();
+                    }
                     $this->log($output);
                     $task->stop();
                 } catch (\Exception $e) {
