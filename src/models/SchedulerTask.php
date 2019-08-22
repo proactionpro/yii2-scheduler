@@ -3,6 +3,7 @@
 namespace proactionpro\scheduler\models;
 
 use Yii;
+use yii\helpers\Console;
 use yii\helpers\Inflector;
 
 /**
@@ -30,12 +31,29 @@ class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
     ];
 
     /**
+     * Colour map for SchedulerTask status ids
+     * @var array
+     */
+    public const STATUS_COLORS = [
+        SchedulerTask::STATUS_PENDING => Console::FG_BLUE,
+        SchedulerTask::STATUS_DUE     => Console::FG_YELLOW,
+        SchedulerTask::STATUS_OVERDUE => Console::FG_RED,
+        SchedulerTask::STATUS_RUNNING => Console::FG_GREEN,
+        SchedulerTask::STATUS_ERROR   => Console::FG_RED,
+    ];
+
+    /**
      * Return Taskname
      * @return string
      */
     public function __toString()
     {
         return Inflector::camel2words($this->name);
+    }
+
+    public function getColor()
+    {
+        return isset(self::STATUS_COLORS[$this->status_id]) ? self::STATUS_COLORS[$this->status_id] : null;
     }
 
     /**

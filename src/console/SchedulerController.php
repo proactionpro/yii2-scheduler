@@ -38,18 +38,6 @@ class SchedulerController extends Controller
     public $taskName;
 
     /**
-     * Colour map for SchedulerTask status ids
-     * @var array
-     */
-    private $_statusColors = [
-        SchedulerTask::STATUS_PENDING => Console::FG_BLUE,
-        SchedulerTask::STATUS_DUE => Console::FG_YELLOW,
-        SchedulerTask::STATUS_OVERDUE => Console::FG_RED,
-        SchedulerTask::STATUS_RUNNING => Console::FG_GREEN,
-        SchedulerTask::STATUS_ERROR => Console::FG_RED,
-    ];
-
-    /**
      * @param string $actionId
      * @return array
      */
@@ -99,8 +87,7 @@ class SchedulerController extends Controller
                 $model->getStatus()
             );
 
-            $color = isset($this->_statusColors[$model->status_id]) ? $this->_statusColors[$model->status_id] : null;
-            echo $this->ansiFormat($row, $color).PHP_EOL;
+            echo $this->ansiFormat($row, $model->color).PHP_EOL;
         }
     }
 
