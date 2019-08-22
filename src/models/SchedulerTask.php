@@ -73,12 +73,10 @@ class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
             $model->next_run = $task->getNextRunDate();
             $model->last_run = NULL;
             $model->status_id = self::STATUS_PENDING;
+            $model->description = $task->description;
+            $model->schedule = $task->schedule;
+            $model->save(false);
         }
-
-        $model->description = $task->description;
-        $model->schedule = $task->schedule;
-        $model->save(false);
-
         return $model;
     }
 
