@@ -17,7 +17,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * Path where task files can be found in the application structure.
      * @var string
      */
-    public $taskPath = '@app/tasks';
+    public $taskPath = '@app/models/cronTasks';
 
     /**
      * Namespace that tasks use.
