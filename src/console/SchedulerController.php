@@ -32,6 +32,12 @@ class SchedulerController extends Controller
     public $force = false;
 
     /**
+     * Assinc execution.
+     * @var bool
+     */
+    public $async = false;
+
+    /**
      * Name of the task to run
      * @var null|string
      */
@@ -48,6 +54,7 @@ class SchedulerController extends Controller
         switch ($actionId) {
             case 'run-all':
                 $options[] = 'force';
+                $options[] = 'async';
                 break;
             case 'run':
                 $options[] = 'force';
@@ -105,11 +112,16 @@ class SchedulerController extends Controller
         ]);
         $this->trigger(SchedulerEvent::EVENT_BEFORE_RUN, $event);
         foreach ($tasks as $task) {
-            $this->runTask($task);
-            if ($task->exception) {
-                $event->success = false;
-                $event->exceptions[] = $task->exception;
+            if ($this->async) {
+                exec('php yii scheduler/run --task="' . $task->getName() . '" &');
+            } else {
+                $this->runTask($task);
+                if ($task->exception) {
+                    $event->success = false;
+                    $event->exceptions[] = $task->exception;
+                }
             }
+
         }
         $this->trigger(SchedulerEvent::EVENT_AFTER_RUN, $event);
         echo PHP_EOL;

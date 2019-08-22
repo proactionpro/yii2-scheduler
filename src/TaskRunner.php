@@ -72,8 +72,9 @@ class TaskRunner extends \yii\base\Component
 
     /**
      * @param bool $forceRun
+     * @return string
      */
-    public function runTask($forceRun = false)
+    public function runTask($forceRun = false): string
     {
         $task = $this->getTask();
 
@@ -91,8 +92,7 @@ class TaskRunner extends \yii\base\Component
                     $this->shutdownHandler();
                     $task->run();
                     $this->running = false;
-                    $output = ob_get_contents();
-                    ob_end_clean();
+                    $output = ob_get_clean();
                     $this->log($output);
                     $task->stop();
                 } catch (\Exception $e) {
@@ -106,6 +106,7 @@ class TaskRunner extends \yii\base\Component
             }
         }
         $task->getModel()->save();
+        return $output ?? 'error';
     }
 
     /**
@@ -154,6 +155,15 @@ class TaskRunner extends \yii\base\Component
     public function log($output)
     {
         $model = $this->getTask()->getModel();
+        if ($model->log_file) {
+            if (file_exists($model->log_file)) {
+                $h = fopen($model->log_name, 'a');
+                fwrite($h, $output . PHP_EOL);
+                fclose($h);
+            } else {
+                $output = 'Log file does not exists' . $output;
+            }
+        }
         $log = $this->getLog();
         $log->started_at = $model->started_at;
         $log->ended_at = date('Y-m-d H:i:s');
