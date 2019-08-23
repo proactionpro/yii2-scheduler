@@ -13,10 +13,10 @@ class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
 {
     public const STATUS_INACTIVE = 0;
     public const STATUS_PENDING = 10;
-    public const STATUS_DUE = 20;
+    public const STATUS_DUE     = 20;
     public const STATUS_RUNNING = 30;
     public const STATUS_OVERDUE = 40;
-    public const STATUS_ERROR = 50;
+    public const STATUS_ERROR   = 50;
 
     /**
      * @var array
@@ -62,12 +62,12 @@ class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
      */
     public static function createTaskModel($task)
     {
-        $model = SchedulerTask::find()
+        $model = self::find()
             ->where(['name' => $task->getName()])
             ->one();
 
         if (!$model) {
-            $model = new SchedulerTask();
+            $model = new self();
             $model->name = $task->getName();
             $model->active = $task->active;
             $model->next_run = $task->getNextRunDate();

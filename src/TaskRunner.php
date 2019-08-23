@@ -93,7 +93,7 @@ class TaskRunner extends \yii\base\Component
                     $task->run();
                     $this->running = false;
                     if ($output = ob_get_contents()) {
-                        ob_get_clean();
+                        ob_clean();
                     }
                     $this->log($output);
                     $task->stop();
