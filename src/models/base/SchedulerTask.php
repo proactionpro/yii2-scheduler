@@ -17,6 +17,7 @@ use yii\data\ActiveDataProvider;
  * @property string $last_run
  * @property string $next_run
  * @property integer $active
+ * @property string $log_file
  *
  * @property \proactionpro\scheduler\models\SchedulerLog[] $schedulerLogs
  */
@@ -53,7 +54,7 @@ class SchedulerTask extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'schedule', 'description', 'status_id'], 'required'],
-            [['description'], 'string'],
+            [['description', 'log_file'], 'string'],
             [['status_id', 'active'], 'integer'],
             [['started_at', 'last_run', 'next_run'], 'safe'],
             [['name', 'schedule'], 'string', 'max' => 45],
@@ -76,6 +77,7 @@ class SchedulerTask extends \yii\db\ActiveRecord
             'last_run' => Yii::t('app', 'Last Run'),
             'next_run' => Yii::t('app', 'Next Run'),
             'active' => Yii::t('app', 'Active'),
+            'log_file' => Yii::t('app', 'Log file'),
         ];
     }
 

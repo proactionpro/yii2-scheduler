@@ -75,6 +75,7 @@ class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
             $model->status_id = self::STATUS_PENDING;
             $model->description = $task->description;
             $model->schedule = $task->schedule;
+            $model->log_file = $task->log_file;
             $model->save(false);
         }
         return $model;
