@@ -76,8 +76,8 @@ class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
             $model->description = $task->description;
             $model->schedule = $task->schedule;
             $model->log_file = $task->log_file;
-            $model->save(false);
         }
+        $model->save(false);
         return $model;
     }
 
