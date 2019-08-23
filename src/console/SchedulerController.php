@@ -105,7 +105,7 @@ class SchedulerController extends Controller
     {
         $tasks = $this->getScheduler()->getTasks();
 
-        echo 'Running Tasks:'.PHP_EOL;
+        echo 'Running Tasks', ($this->async ? ' async.' : ':'), PHP_EOL;
         $event = new SchedulerEvent([
             'tasks' => $tasks,
             'success' => true,
@@ -123,6 +123,7 @@ class SchedulerController extends Controller
             }
 
         }
+        echo PHP_EOL, 'Done.';
         $this->trigger(SchedulerEvent::EVENT_AFTER_RUN, $event);
         echo PHP_EOL;
     }

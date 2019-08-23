@@ -155,11 +155,16 @@ class TaskRunner extends \yii\base\Component
     {
         $model = $this->getTask()->getModel();
         if ($model->log_file) {
+            if (!file_exists($model->log_file)) {
+                if (touch($model->log_file)) {
+                    chmod($model->log_file, 0666);
+                }
+            }
             if ($h = @fopen($model->log_file, 'a')) {
                 fwrite($h, $output . PHP_EOL);
                 fclose($h);
             } else {
-                $output = 'Log file does not exist and cannot be created.' . $output;
+                $output = 'Log file does not exist and cannot be created.' . PHP_EOL . $output;
             }
         }
         $log = $this->getLog();
