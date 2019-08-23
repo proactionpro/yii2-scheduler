@@ -123,7 +123,7 @@ class SchedulerController extends Controller
             }
 
         }
-        echo PHP_EOL, 'Done.';
+        echo PHP_EOL, 'Done.', PHP_EOL;
         $this->trigger(SchedulerEvent::EVENT_AFTER_RUN, $event);
         echo PHP_EOL;
     }
