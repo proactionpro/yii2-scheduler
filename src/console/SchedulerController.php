@@ -113,7 +113,7 @@ class SchedulerController extends Controller
         $this->trigger(SchedulerEvent::EVENT_BEFORE_RUN, $event);
         foreach ($tasks as $task) {
             if ($this->async) {
-                exec('php yii scheduler/run --task="' . $task->getName() . '" &');
+                exec('php yii scheduler/run --taskName="' . $task->getName() . '" &');
             } else {
                 $this->runTask($task);
                 if ($task->exception) {
