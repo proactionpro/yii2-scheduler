@@ -92,9 +92,7 @@ class TaskRunner extends \yii\base\Component
                     $this->shutdownHandler();
                     $task->run();
                     $this->running = false;
-                    if ($output = ob_get_contents()) {
-                        ob_clean();
-                    }
+                    $output = ob_get_clean();
                     $this->log($output);
                     $task->stop();
                 } catch (\Exception $e) {
@@ -142,8 +140,7 @@ class TaskRunner extends \yii\base\Component
             $tx->rollBack();
         }
 
-        $output = ob_get_contents();
-        ob_end_clean();
+        $output = ob_get_clean();
 
         $this->error = true;
         $this->log($output);
@@ -158,12 +155,11 @@ class TaskRunner extends \yii\base\Component
     {
         $model = $this->getTask()->getModel();
         if ($model->log_file) {
-            if (file_exists($model->log_file)) {
-                $h = fopen($model->log_name, 'a');
+            if ($h = @fopen($model->log_name, 'a')) {
                 fwrite($h, $output . PHP_EOL);
                 fclose($h);
             } else {
-                $output = 'Log file does not exists' . $output;
+                $output = 'Log file does not exist and cannot be created.' . $output;
             }
         }
         $log = $this->getLog();
