@@ -155,7 +155,7 @@ class TaskRunner extends \yii\base\Component
     {
         $model = $this->getTask()->getModel();
         if ($model->log_file) {
-            if ($h = @fopen($model->log_name, 'a')) {
+            if ($h = @fopen($model->log_file, 'a')) {
                 fwrite($h, $output . PHP_EOL);
                 fclose($h);
             } else {
