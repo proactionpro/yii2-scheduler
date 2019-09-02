@@ -1,13 +1,13 @@
 <?php
 
-namespace proactionpro\scheduler\tests;
+namespace proaction\scheduler\tests;
 
 use Codeception\Util\Stub;
-use \proactionpro\scheduler\tests\tasks\AlphabetTask;
-use \proactionpro\scheduler\TaskRunner;
-use \proactionpro\scheduler\models\SchedulerTask;
-use \proactionpro\scheduler\models\SchedulerLog;
-use proactionpro\scheduler\tests\tasks\ErrorTask;
+use \proaction\scheduler\tests\tasks\AlphabetTask;
+use \proaction\scheduler\TaskRunner;
+use \proaction\scheduler\models\SchedulerTask;
+use \proaction\scheduler\models\SchedulerLog;
+use proaction\scheduler\tests\tasks\ErrorTask;
 use \yii\codeception\TestCase;
 
 class TaskRunnerTest extends TestCase

@@ -1,9 +1,9 @@
 <?php
 
-namespace proactionpro\scheduler\tests;
+namespace proaction\scheduler\tests;
 
-use \proactionpro\scheduler\tests\tasks\AlphabetTask;
-use \proactionpro\scheduler\models\SchedulerTask;
+use \proaction\scheduler\tests\tasks\AlphabetTask;
+use \proaction\scheduler\models\SchedulerTask;
 use \yii\codeception\TestCase;
 use AspectMock\Test as test;
 

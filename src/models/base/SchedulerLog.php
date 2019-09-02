@@ -1,6 +1,6 @@
 <?php
 
-namespace proactionpro\scheduler\models\base;
+namespace proaction\scheduler\models\base;
 
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -15,7 +15,7 @@ use yii\data\ActiveDataProvider;
  * @property string $output
  * @property integer $error
  *
- * @property \proactionpro\scheduler\models\SchedulerTask $schedulerTask
+ * @property \proaction\scheduler\models\SchedulerTask $schedulerTask
  */
 class SchedulerLog extends \yii\db\ActiveRecord
 {
@@ -76,7 +76,7 @@ class SchedulerLog extends \yii\db\ActiveRecord
      */
     public function getSchedulerTask()
     {
-        return $this->hasOne(\proactionpro\scheduler\models\SchedulerTask::className(), ['id' => 'scheduler_task_id']);
+        return $this->hasOne(\proaction\scheduler\models\SchedulerTask::className(), ['id' => 'scheduler_task_id']);
     }
 
     /**

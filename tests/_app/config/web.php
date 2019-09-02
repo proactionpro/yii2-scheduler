@@ -13,7 +13,7 @@ $config = [
     ],
     'modules' => [
         'scheduler' => [
-            'class' => 'proactionpro\scheduler\Module',
+            'class' => 'proaction\scheduler\Module',
         ],
     ],
     'components' => [

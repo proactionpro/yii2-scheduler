@@ -1,4 +1,4 @@
-namespace: proactionpro\scheduler\tests
+namespace: proaction\scheduler\tests
 actor: Tester
 paths:
     tests: tests

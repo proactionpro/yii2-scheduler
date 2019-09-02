@@ -1,17 +1,17 @@
 <?php
-namespace proactionpro\scheduler;
+namespace proaction\scheduler;
 
 use Yii;
-use proactionpro\scheduler\events\TaskEvent;
-use proactionpro\scheduler\models\SchedulerLog;
-use proactionpro\scheduler\models\SchedulerTask;
+use proaction\scheduler\events\TaskEvent;
+use proaction\scheduler\models\SchedulerLog;
+use proaction\scheduler\models\SchedulerTask;
 use yii\helpers\FileHelper;
 
 /**
  * Class TaskRunner
  *
- * @package proactionpro\scheduler
- * @property \proactionpro\scheduler\Task $task
+ * @package proaction\scheduler
+ * @property \proaction\scheduler\Task $task
  */
 class TaskRunner extends \yii\base\Component
 {
@@ -25,12 +25,12 @@ class TaskRunner extends \yii\base\Component
     /**
      * The task that will be executed.
      *
-     * @var \proactionpro\scheduler\Task
+     * @var \proaction\scheduler\Task
      */
     private $_task;
 
     /**
-     * @var \proactionpro\scheduler\models\SchedulerLog
+     * @var \proaction\scheduler\models\SchedulerLog
      */
     private $_log;
 
@@ -56,7 +56,7 @@ class TaskRunner extends \yii\base\Component
     }
 
     /**
-     * @param \proactionpro\scheduler\models\SchedulerLog $log
+     * @param \proaction\scheduler\models\SchedulerLog $log
      */
     public function setLog($log)
     {
@@ -111,14 +111,14 @@ class TaskRunner extends \yii\base\Component
     }
 
     /**
-     * If the yii error handler has been overridden with `\proactionpro\scheduler\ErrorHandler`,
+     * If the yii error handler has been overridden with `\proaction\scheduler\ErrorHandler`,
      * pass it this instance of TaskRunner, so it can update the state of tasks in the event of a fatal error.
      */
     public function shutdownHandler()
     {
         $errorHandler = Yii::$app->getErrorHandler();
 
-        if ($errorHandler instanceof \proactionpro\scheduler\ErrorHandler) {
+        if ($errorHandler instanceof \proaction\scheduler\ErrorHandler) {
             Yii::$app->getErrorHandler()->taskRunner = $this;
         }
     }

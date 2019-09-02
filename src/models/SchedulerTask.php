@@ -1,6 +1,6 @@
 <?php
 
-namespace proactionpro\scheduler\models;
+namespace proaction\scheduler\models;
 
 use Yii;
 use yii\helpers\Console;
@@ -9,7 +9,7 @@ use yii\helpers\Inflector;
 /**
  * This is the model class for table "scheduler_task".
  */
-class SchedulerTask extends \proactionpro\scheduler\models\base\SchedulerTask
+class SchedulerTask extends \proaction\scheduler\models\base\SchedulerTask
 {
     public const STATUS_INACTIVE = 0;
     public const STATUS_PENDING = 10;

@@ -1,17 +1,17 @@
 <?php
 
 
-namespace proactionpro\scheduler;
+namespace proaction\scheduler;
 
-use proactionpro\scheduler\events\TaskEvent;
-use proactionpro\scheduler\models\SchedulerTask;
+use proaction\scheduler\events\TaskEvent;
+use proaction\scheduler\models\SchedulerTask;
 use yii\base\Component;
 use yii\helpers\StringHelper;
 use Cron\CronExpression;
 
 /**
  * Class Task
- * @package proactionpro\scheduler
+ * @package proaction\scheduler
  */
 abstract class Task extends Component
 {

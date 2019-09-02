@@ -4,14 +4,14 @@
  *
  * @var \yii\web\View $this
  * @var \yii\data\ActiveDataProvider $dataProvider
- * @var \proactionpro\scheduler\models\SchedulerTask $model
+ * @var \proaction\scheduler\models\SchedulerTask $model
  */
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
 
 
-$this->title = \proactionpro\scheduler\models\SchedulerTask::label(2);
+$this->title = \proaction\scheduler\models\SchedulerTask::label(2);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

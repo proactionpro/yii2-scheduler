@@ -3,11 +3,11 @@
  * Update Task View
  *
  * @var yii\web\View $this
- * @var proactionpro\scheduler\models\SchedulerLog $model
+ * @var proaction\scheduler\models\SchedulerLog $model
  */
 
 use yii\helpers\Html;
-use proactionpro\scheduler\models\SchedulerTask;
+use proaction\scheduler\models\SchedulerTask;
 
 
 $this->title = $model->__toString();

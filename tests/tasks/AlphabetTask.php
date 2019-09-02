@@ -1,11 +1,11 @@
 <?php
-namespace proactionpro\scheduler\tests\tasks;
+namespace proaction\scheduler\tests\tasks;
 
 /**
  * Class AlphabetTask
- * @package proactionpro\scheduler\tests\tasks
+ * @package proaction\scheduler\tests\tasks
  */
-class AlphabetTask extends \proactionpro\scheduler\Task
+class AlphabetTask extends \proaction\scheduler\Task
 {
     public $description = 'Prints the alphabet';
     public $schedule = '*/1 * * * *';

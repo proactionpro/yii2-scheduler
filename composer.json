@@ -1,10 +1,10 @@
 {
-  "name": "proactionpro/yii2-scheduler",
+  "name": "proaction/yii2-scheduler",
   "description": "A scheduled task runner for Yii2 applications",
   "keywords": ["yii2", "cron", "scheduler", "task"],
   "type": "yii2-extension",
   "license": "proprietary",
-  "homepage": "https://github.com/proactionpro/yii2-scheduler",
+  "homepage": "https://github.com/proaction/yii2-scheduler",
   "authors": [
     {
       "name": "Byron Adams",
@@ -32,8 +32,8 @@
   },
   "autoload": {
     "psr-4": {
-      "proactionpro\\scheduler\\": "src",
-      "proactionpro\\scheduler\\tests\\": "tests"
+      "proaction\\scheduler\\": "src",
+      "proaction\\scheduler\\tests\\": "tests"
     }
   }
 }

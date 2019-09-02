@@ -1,13 +1,13 @@
 <?php
-namespace proactionpro\scheduler\actions;
+namespace proaction\scheduler\actions;
 
 use Yii;
 use yii\base\Action;
-use proactionpro\scheduler\models\SchedulerTask;
+use proaction\scheduler\models\SchedulerTask;
 
 /**
  * Class IndexAction
- * @package proactionpro\scheduler\actions
+ * @package proaction\scheduler\actions
  */
 class IndexAction extends Action
 {
