@@ -158,7 +158,7 @@ class TaskRunner extends \yii\base\Component
         $model = $this->getTask()->getModel();
         if ($model->log_file) {
             if (!file_exists($model->log_file)) {
-                FileHelper::createDirectory(dirname($model->log_file), 0666);
+                FileHelper::createDirectory(dirname($model->log_file), 0777);
                 if (touch($model->log_file)) {
                     chmod($model->log_file, 0666);
                 }
