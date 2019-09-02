@@ -15,6 +15,12 @@
       "email": "support@webtools.co.nz",
       "homepage": "http://www.webtools.co.nz",
       "role": "Developer"
+    },
+    {
+      "name": "Proaction",
+      "email": "boltunov@proaction.pro",
+      "homepage": "https://proaction.pro/",
+      "role": "Developer"
     }
   ],
   "require": {
