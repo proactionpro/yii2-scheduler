@@ -4,7 +4,7 @@
   "keywords": ["yii2", "cron", "scheduler", "task"],
   "type": "yii2-extension",
   "license": "proprietary",
-  "homepage": "https://github.com/proaction/yii2-scheduler",
+  "homepage": "https://github.com/proactionpro/yii2-scheduler",
   "authors": [
     {
       "name": "Byron Adams",
@@ -14,6 +14,12 @@
       "name": "Webtools Ltd",
       "email": "support@webtools.co.nz",
       "homepage": "http://www.webtools.co.nz",
+      "role": "Developer"
+    },
+    {
+      "name": "Proaction",
+      "email": "boltunov@proaction.pro",
+      "homepage": "https://proaction.pro/",
       "role": "Developer"
     }
   ],
