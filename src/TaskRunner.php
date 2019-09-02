@@ -5,6 +5,7 @@ use Yii;
 use proactionpro\scheduler\events\TaskEvent;
 use proactionpro\scheduler\models\SchedulerLog;
 use proactionpro\scheduler\models\SchedulerTask;
+use yii\helpers\FileHelper;
 
 /**
  * Class TaskRunner
@@ -150,12 +151,14 @@ class TaskRunner extends \yii\base\Component
 
     /**
      * @param string $output
+     * @throws \yii\base\Exception
      */
     public function log($output)
     {
         $model = $this->getTask()->getModel();
         if ($model->log_file) {
             if (!file_exists($model->log_file)) {
+                FileHelper::createDirectory(dirname($model->log_file), 0666);
                 if (touch($model->log_file)) {
                     chmod($model->log_file, 0666);
                 }
