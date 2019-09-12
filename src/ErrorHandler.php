@@ -1,10 +1,10 @@
 <?php
 
-namespace webtoolsnz\scheduler;
+namespace proaction\scheduler;
 
 /**
  * Class ErrorHandler
- * @package webtoolsnz\scheduler
+ * @package proaction\scheduler
  */
 class ErrorHandler extends \yii\console\ErrorHandler
 {

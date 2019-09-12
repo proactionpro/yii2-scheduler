@@ -749,7 +749,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "webtoolsnz\\widgets\\": "src"
+                    "proaction\\widgets\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",

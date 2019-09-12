@@ -1,15 +1,15 @@
 <?php
-namespace webtoolsnz\scheduler;
+namespace proaction\scheduler;
 
-use webtoolsnz\scheduler\models\SchedulerLog;
+use proaction\scheduler\models\SchedulerLog;
 use Yii;
 use yii\base\BootstrapInterface;
-use webtoolsnz\scheduler\models\SchedulerTask;
+use proaction\scheduler\models\SchedulerTask;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class Module
- * @package webtoolsnz\scheduler
+ * @package proaction\scheduler
  */
 class Module extends \yii\base\Module implements BootstrapInterface
 {
@@ -17,13 +17,13 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * Path where task files can be found in the application structure.
      * @var string
      */
-    public $taskPath = '@app/tasks';
+    public $taskPath = '@app/models/cronTasks';
 
     /**
      * Namespace that tasks use.
      * @var string
      */
-    public $taskNameSpace = 'app\tasks';
+    public $taskNameSpace = 'app\models\cronTasks';
 
     /**
      * Bootstrap the console controllers.
@@ -35,7 +35,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
         if ($app instanceof \yii\console\Application && !isset($app->controllerMap[$this->id])) {
             $app->controllerMap[$this->id] = [
-                'class' => 'webtoolsnz\scheduler\console\SchedulerController',
+                'class' => 'proaction\scheduler\console\SchedulerController',
             ];
         }
     }

@@ -1,12 +1,12 @@
 <?php
 
-namespace webtoolsnz\scheduler\console;
+namespace proaction\scheduler\console;
 
-use webtoolsnz\scheduler\events\SchedulerEvent;
-use webtoolsnz\scheduler\models\base\SchedulerLog;
-use webtoolsnz\scheduler\models\SchedulerTask;
-use webtoolsnz\scheduler\Task;
-use webtoolsnz\scheduler\TaskRunner;
+use proaction\scheduler\events\SchedulerEvent;
+use proaction\scheduler\models\base\SchedulerLog;
+use proaction\scheduler\models\SchedulerTask;
+use proaction\scheduler\Task;
+use proaction\scheduler\TaskRunner;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\console\Controller;
@@ -32,22 +32,16 @@ class SchedulerController extends Controller
     public $force = false;
 
     /**
+     * Assinc execution.
+     * @var bool
+     */
+    public $async = false;
+
+    /**
      * Name of the task to run
      * @var null|string
      */
     public $taskName;
-
-    /**
-     * Colour map for SchedulerTask status ids
-     * @var array
-     */
-    private $_statusColors = [
-        SchedulerTask::STATUS_PENDING => Console::FG_BLUE,
-        SchedulerTask::STATUS_DUE => Console::FG_YELLOW,
-        SchedulerTask::STATUS_OVERDUE => Console::FG_RED,
-        SchedulerTask::STATUS_RUNNING => Console::FG_GREEN,
-        SchedulerTask::STATUS_ERROR => Console::FG_RED,
-    ];
 
     /**
      * @param string $actionId
@@ -60,6 +54,7 @@ class SchedulerController extends Controller
         switch ($actionId) {
             case 'run-all':
                 $options[] = 'force';
+                $options[] = 'async';
                 break;
             case 'run':
                 $options[] = 'force';
@@ -71,7 +66,7 @@ class SchedulerController extends Controller
     }
 
     /**
-     * @return \webtoolsnz\scheduler\Module
+     * @return \proaction\scheduler\Module
      */
     private function getScheduler()
     {
@@ -99,8 +94,7 @@ class SchedulerController extends Controller
                 $model->getStatus()
             );
 
-            $color = isset($this->_statusColors[$model->status_id]) ? $this->_statusColors[$model->status_id] : null;
-            echo $this->ansiFormat($row, $color).PHP_EOL;
+            echo $this->ansiFormat($row, $model->color).PHP_EOL;
         }
     }
 
@@ -111,19 +105,25 @@ class SchedulerController extends Controller
     {
         $tasks = $this->getScheduler()->getTasks();
 
-        echo 'Running Tasks:'.PHP_EOL;
+        echo 'Running Tasks', ($this->async ? ' async.' : ':'), PHP_EOL;
         $event = new SchedulerEvent([
             'tasks' => $tasks,
             'success' => true,
         ]);
         $this->trigger(SchedulerEvent::EVENT_BEFORE_RUN, $event);
         foreach ($tasks as $task) {
-            $this->runTask($task);
-            if ($task->exception) {
-                $event->success = false;
-                $event->exceptions[] = $task->exception;
+            if ($this->async) {
+                exec('php yii scheduler/run --taskName="' . $task->getName() . '" &');
+            } else {
+                $this->runTask($task);
+                if ($task->exception) {
+                    $event->success = false;
+                    $event->exceptions[] = $task->exception;
+                }
             }
+
         }
+        echo PHP_EOL, 'Done.', PHP_EOL;
         $this->trigger(SchedulerEvent::EVENT_AFTER_RUN, $event);
         echo PHP_EOL;
     }

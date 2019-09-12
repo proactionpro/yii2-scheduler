@@ -1,14 +1,14 @@
 <?php
-namespace webtoolsnz\scheduler\actions;
+namespace proaction\scheduler\actions;
 
-use webtoolsnz\scheduler\models\SchedulerLog;
+use proaction\scheduler\models\SchedulerLog;
 use Yii;
 use yii\base\Action;
-use webtoolsnz\scheduler\models\SchedulerTask;
+use proaction\scheduler\models\SchedulerTask;
 
 /**
  * Class UpdateAction
- * @package webtoolsnz\scheduler\actions
+ * @package proaction\scheduler\actions
  */
 class UpdateAction extends Action
 {

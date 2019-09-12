@@ -1,5 +1,5 @@
 {
-  "name": "proactionpro/yii2-scheduler",
+  "name": "proaction/yii2-scheduler",
   "description": "A scheduled task runner for Yii2 applications",
   "keywords": ["yii2", "cron", "scheduler", "task"],
   "type": "yii2-extension",
@@ -14,6 +14,12 @@
       "name": "Webtools Ltd",
       "email": "support@webtools.co.nz",
       "homepage": "http://www.webtools.co.nz",
+      "role": "Developer"
+    },
+    {
+      "name": "Proaction",
+      "email": "boltunov@proaction.pro",
+      "homepage": "https://proaction.pro/",
       "role": "Developer"
     }
   ],
@@ -32,8 +38,8 @@
   },
   "autoload": {
     "psr-4": {
-      "webtoolsnz\\scheduler\\": "src",
-      "webtoolsnz\\scheduler\\tests\\": "tests"
+      "proaction\\scheduler\\": "src",
+      "proaction\\scheduler\\tests\\": "tests"
     }
   }
 }

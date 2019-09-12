@@ -1,16 +1,17 @@
 <?php
-namespace webtoolsnz\scheduler;
+namespace proaction\scheduler;
 
 use Yii;
-use webtoolsnz\scheduler\events\TaskEvent;
-use webtoolsnz\scheduler\models\SchedulerLog;
-use webtoolsnz\scheduler\models\SchedulerTask;
+use proaction\scheduler\events\TaskEvent;
+use proaction\scheduler\models\SchedulerLog;
+use proaction\scheduler\models\SchedulerTask;
+use yii\helpers\FileHelper;
 
 /**
  * Class TaskRunner
  *
- * @package webtoolsnz\scheduler
- * @property \webtoolsnz\scheduler\Task $task
+ * @package proaction\scheduler
+ * @property \proaction\scheduler\Task $task
  */
 class TaskRunner extends \yii\base\Component
 {
@@ -24,12 +25,12 @@ class TaskRunner extends \yii\base\Component
     /**
      * The task that will be executed.
      *
-     * @var \webtoolsnz\scheduler\Task
+     * @var \proaction\scheduler\Task
      */
     private $_task;
 
     /**
-     * @var \webtoolsnz\scheduler\models\SchedulerLog
+     * @var \proaction\scheduler\models\SchedulerLog
      */
     private $_log;
 
@@ -55,7 +56,7 @@ class TaskRunner extends \yii\base\Component
     }
 
     /**
-     * @param \webtoolsnz\scheduler\models\SchedulerLog $log
+     * @param \proaction\scheduler\models\SchedulerLog $log
      */
     public function setLog($log)
     {
@@ -72,8 +73,9 @@ class TaskRunner extends \yii\base\Component
 
     /**
      * @param bool $forceRun
+     * @return string
      */
-    public function runTask($forceRun = false)
+    public function runTask($forceRun = false): string
     {
         $task = $this->getTask();
 
@@ -91,8 +93,7 @@ class TaskRunner extends \yii\base\Component
                     $this->shutdownHandler();
                     $task->run();
                     $this->running = false;
-                    $output = ob_get_contents();
-                    ob_end_clean();
+                    $output = ob_get_clean();
                     $this->log($output);
                     $task->stop();
                 } catch (\Exception $e) {
@@ -106,17 +107,18 @@ class TaskRunner extends \yii\base\Component
             }
         }
         $task->getModel()->save();
+        return $output ?? 'error';
     }
 
     /**
-     * If the yii error handler has been overridden with `\webtoolsnz\scheduler\ErrorHandler`,
+     * If the yii error handler has been overridden with `\proaction\scheduler\ErrorHandler`,
      * pass it this instance of TaskRunner, so it can update the state of tasks in the event of a fatal error.
      */
     public function shutdownHandler()
     {
         $errorHandler = Yii::$app->getErrorHandler();
 
-        if ($errorHandler instanceof \webtoolsnz\scheduler\ErrorHandler) {
+        if ($errorHandler instanceof \proaction\scheduler\ErrorHandler) {
             Yii::$app->getErrorHandler()->taskRunner = $this;
         }
     }
@@ -139,8 +141,7 @@ class TaskRunner extends \yii\base\Component
             $tx->rollBack();
         }
 
-        $output = ob_get_contents();
-        ob_end_clean();
+        $output = ob_get_clean();
 
         $this->error = true;
         $this->log($output);
@@ -150,10 +151,25 @@ class TaskRunner extends \yii\base\Component
 
     /**
      * @param string $output
+     * @throws \yii\base\Exception
      */
     public function log($output)
     {
         $model = $this->getTask()->getModel();
+        if ($model->log_file) {
+            if (!file_exists($model->log_file)) {
+                FileHelper::createDirectory(dirname($model->log_file), 0777);
+                if (touch($model->log_file)) {
+                    chmod($model->log_file, 0666);
+                }
+            }
+            if ($h = @fopen($model->log_file, 'a')) {
+                fwrite($h, $output . PHP_EOL);
+                fclose($h);
+            } else {
+                $output = 'Log file does not exist and cannot be created.' . PHP_EOL . $output;
+            }
+        }
         $log = $this->getLog();
         $log->started_at = $model->started_at;
         $log->ended_at = date('Y-m-d H:i:s');

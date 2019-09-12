@@ -1,7 +1,7 @@
 <?php
 
 
-namespace webtoolsnz\scheduler\events;
+namespace proaction\scheduler\events;
 
 use yii\base\Event;
 

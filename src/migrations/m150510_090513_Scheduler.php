@@ -10,11 +10,6 @@ class m150510_090513_Scheduler extends Migration
 
     public function safeUp()
     {
-        $tableOptions = null;
-        if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
-        }
-
         $this->createTable(self::TABLE_SCHEDULER_LOG, [
             'id' => $this->primaryKey(),
             'scheduler_task_id' => $this->integer()->notNull(),
@@ -22,7 +17,7 @@ class m150510_090513_Scheduler extends Migration
             'ended_at' => $this->timestamp()->defaultValue(null),
             'output' => $this->text()->notNull(),
             'error' => $this->boolean()->defaultValue(false),
-        ], $tableOptions);
+        ]);
 
         $this->createTable(self::TABLE_SCHEDULER_TASK, [
             'id' => $this->primaryKey(),
@@ -34,7 +29,8 @@ class m150510_090513_Scheduler extends Migration
             'last_run' => $this->timestamp()->null()->defaultValue(null),
             'next_run' => $this->timestamp()->null()->defaultValue(null),
             'active' => $this->boolean()->notNull()->defaultValue(false),
-        ], $tableOptions);
+            'log_file' => $this->text()->null()->defaultValue(null),
+        ]);
         $this->addForeignKey('fk_scheduler_log_scheduler_task_id', self::TABLE_SCHEDULER_LOG, 'scheduler_task_id', self::TABLE_SCHEDULER_TASK, 'id');
     }
 

@@ -1,32 +1,45 @@
 <?php
 
-namespace webtoolsnz\scheduler\models;
+namespace proaction\scheduler\models;
 
 use Yii;
+use yii\helpers\Console;
 use yii\helpers\Inflector;
 
 /**
  * This is the model class for table "scheduler_task".
  */
-class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
+class SchedulerTask extends \proaction\scheduler\models\base\SchedulerTask
 {
-    const STATUS_INACTIVE = 0;
-    const STATUS_PENDING = 10;
-    const STATUS_DUE = 20;
-    const STATUS_RUNNING = 30;
-    const STATUS_OVERDUE = 40;
-    const STATUS_ERROR = 50;
+    public const STATUS_INACTIVE = 0;
+    public const STATUS_PENDING = 10;
+    public const STATUS_DUE     = 20;
+    public const STATUS_RUNNING = 30;
+    public const STATUS_OVERDUE = 40;
+    public const STATUS_ERROR   = 50;
 
     /**
      * @var array
      */
-    private static $_statuses = [
+    public const STATUSES = [
         self::STATUS_INACTIVE => 'Inactive',
-        self::STATUS_PENDING => 'Pending',
-        self::STATUS_DUE => 'Due',
-        self::STATUS_RUNNING => 'Running',
-        self::STATUS_OVERDUE => 'Overdue',
-        self::STATUS_ERROR => 'Error',
+        self::STATUS_PENDING  => 'Pending',
+        self::STATUS_DUE      => 'Due',
+        self::STATUS_RUNNING  => 'Running',
+        self::STATUS_OVERDUE  => 'Overdue',
+        self::STATUS_ERROR    => 'Error',
+    ];
+
+    /**
+     * Colour map for SchedulerTask status ids
+     * @var array
+     */
+    public const STATUS_COLORS = [
+        SchedulerTask::STATUS_PENDING => Console::FG_BLUE,
+        SchedulerTask::STATUS_DUE     => Console::FG_YELLOW,
+        SchedulerTask::STATUS_OVERDUE => Console::FG_RED,
+        SchedulerTask::STATUS_RUNNING => Console::FG_GREEN,
+        SchedulerTask::STATUS_ERROR   => Console::FG_RED,
     ];
 
     /**
@@ -38,29 +51,33 @@ class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
         return Inflector::camel2words($this->name);
     }
 
+    public function getColor()
+    {
+        return isset(self::STATUS_COLORS[$this->status_id]) ? self::STATUS_COLORS[$this->status_id] : null;
+    }
+
     /**
      * @param $task
      * @return array|null|SchedulerTask|\yii\db\ActiveRecord
      */
     public static function createTaskModel($task)
     {
-        $model = SchedulerTask::find()
+        $model = self::find()
             ->where(['name' => $task->getName()])
             ->one();
 
         if (!$model) {
-            $model = new SchedulerTask();
+            $model = new self();
             $model->name = $task->getName();
             $model->active = $task->active;
             $model->next_run = $task->getNextRunDate();
             $model->last_run = NULL;
             $model->status_id = self::STATUS_PENDING;
+            $model->description = $task->description;
+            $model->schedule = $task->schedule;
+            $model->log_file = $task->log_file;
         }
-
-        $model->description = $task->description;
-        $model->schedule = $task->schedule;
         $model->save(false);
-
         return $model;
     }
 
@@ -69,7 +86,7 @@ class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
      */
     public function getStatus()
     {
-        return isset(self::$_statuses[$this->status_id]) ? self::$_statuses[$this->status_id] : null;
+        return isset(self::STATUSES[$this->status_id]) ? self::STATUSES[$this->status_id] : null;
     }
 
 

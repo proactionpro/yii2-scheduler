@@ -1,6 +1,6 @@
 <?php
 
-namespace webtoolsnz\scheduler\models\base;
+namespace proaction\scheduler\models\base;
 
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -17,8 +17,9 @@ use yii\data\ActiveDataProvider;
  * @property string $last_run
  * @property string $next_run
  * @property integer $active
+ * @property string $log_file
  *
- * @property \webtoolsnz\scheduler\models\SchedulerLog[] $schedulerLogs
+ * @property \proaction\scheduler\models\SchedulerLog[] $schedulerLogs
  */
 class SchedulerTask extends \yii\db\ActiveRecord
 {
@@ -53,7 +54,7 @@ class SchedulerTask extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'schedule', 'description', 'status_id'], 'required'],
-            [['description'], 'string'],
+            [['description', 'log_file'], 'string'],
             [['status_id', 'active'], 'integer'],
             [['started_at', 'last_run', 'next_run'], 'safe'],
             [['name', 'schedule'], 'string', 'max' => 45],
@@ -76,6 +77,7 @@ class SchedulerTask extends \yii\db\ActiveRecord
             'last_run' => Yii::t('app', 'Last Run'),
             'next_run' => Yii::t('app', 'Next Run'),
             'active' => Yii::t('app', 'Active'),
+            'log_file' => Yii::t('app', 'Log file'),
         ];
     }
 
@@ -84,7 +86,7 @@ class SchedulerTask extends \yii\db\ActiveRecord
      */
     public function getSchedulerLogs()
     {
-        return $this->hasMany(\webtoolsnz\scheduler\models\SchedulerLog::className(), ['scheduled_task_id' => 'id']);
+        return $this->hasMany(\proaction\scheduler\models\SchedulerLog::className(), ['scheduled_task_id' => 'id']);
     }
 
     /**

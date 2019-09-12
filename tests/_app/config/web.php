@@ -13,7 +13,7 @@ $config = [
     ],
     'modules' => [
         'scheduler' => [
-            'class' => 'webtoolsnz\scheduler\Module',
+            'class' => 'proaction\scheduler\Module',
         ],
     ],
     'components' => [
