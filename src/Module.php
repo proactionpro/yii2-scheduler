@@ -143,6 +143,6 @@ class Module extends \yii\base\Module implements BootstrapInterface
         $runner->setDefaultLogfile($this->defaultLogFile);
         $runner->setLog(new SchedulerLog());
         $fullTaskOutput = $runner->runTask($forceRun);
-        return ($runner->error ?? ($fullTaskOutput ?: 'Task complete')) . PHP_EOL;
+        return ($runner->error ?? ($fullOutput ? $fullTaskOutput: 'Task complete')) . PHP_EOL;
     }
 }
