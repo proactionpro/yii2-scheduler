@@ -74,7 +74,7 @@ abstract class Task extends Component
         \yii\base\Event::on(self::className(), self::EVENT_BEFORE_RUN, function ($event) use ($lockName) {
             /* @var $event TaskEvent */
             $db = \Yii::$app->db;
-            $result = $db->createCommand("GET_LOCK(:lockname, 1)", [':lockname' => $lockName])->queryScalar();
+            $result = $db->createCommand('GET_LOCK(:lockname, 1)', [':lockname' => $lockName])->queryScalar();
 
             if (!$result) {
                 // we didn't get the lock which means the task is still running
@@ -85,7 +85,7 @@ abstract class Task extends Component
             // release the lock
             /* @var $event TaskEvent */
             $db = \Yii::$app->db;
-            $db->createCommand("RELEASE_LOCK(:lockname, 1)", [':lockname' => $lockName])->queryScalar();
+            $db->createCommand('RELEASE_LOCK(:lockname, 1)', [':lockname' => $lockName])->queryScalar();
         });
     }
 
@@ -175,13 +175,13 @@ abstract class Task extends Component
 
         if ($withText) {
             if (!$model->active && !$forceRun) {
-                return 'Task is not active';
+                return 'Task is not active, use --force to run anyway';
             }
             if (!((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue))) {
                 if ($isRunning) {
                     return 'The task was launched and has not yet completed. Wait for the task to complete or overdue threshold to expire (' . $this->overdueThreshold . ')';
                 }
-                return 'The task launch is not due yet';
+                return 'Task is not due, use --force to run anyway';
             }
             return null;
         }

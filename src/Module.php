@@ -7,6 +7,7 @@ use yii\base\Application;
 use yii\base\BootstrapInterface;
 use proaction\scheduler\models\SchedulerTask;
 use yii\base\ErrorException;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
@@ -29,6 +30,9 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * @var string
      */
     public $taskNameSpace = 'app\models\cronTasks';
+
+    /** @var string */
+    public $defaultLogFile = null;
 
     /**
      * Bootstrap the console controllers.
@@ -122,5 +126,23 @@ class Module extends \yii\base\Module implements BootstrapInterface
         return $task;
     }
 
-
+    /**
+     * Run task
+     *
+     * @param Task $task
+     * @param bool $forceRun
+     * @param bool $fullOutput
+     * @return string
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public function runTask(Task $task, bool $forceRun = false, bool $fullOutput = false): string
+    {
+        $runner = new TaskRunner();
+        $runner->setTask($task);
+        $runner->setDefaultLogfile($this->defaultLogFile);
+        $runner->setLog(new SchedulerLog());
+        $fullTaskOutput = $runner->runTask($forceRun);
+        return ($runner->error ?? ($fullTaskOutput ?: 'Task complete')) . PHP_EOL;
+    }
 }

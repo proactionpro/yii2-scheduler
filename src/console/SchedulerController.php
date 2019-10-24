@@ -165,16 +165,8 @@ class SchedulerController extends Controller
      */
     private function runTask(Task $task)
     {
-        echo sprintf("\tRunning %s... ", $task->getName());
-        if ($task->shouldRun($this->force)) {
-            $runner = new TaskRunner();
-            $runner->setTask($task);
-            $runner->setLog(new SchedulerLog());
-            $runner->runTask($this->force);
-            echo $runner->error ?: 'Done';
-        } else {
-            echo 'Task is not due, use --force to run anyway';
-        }
-        echo PHP_EOL;
+        echo sprintf("\tRunning %s... ", $task->getName()),
+        $this->getScheduler()->runTask($task, $this->force),
+        PHP_EOL;
     }
 }

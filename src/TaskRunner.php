@@ -12,7 +12,8 @@ use yii\helpers\FileHelper;
  * Class TaskRunner
  *
  * @package proaction\scheduler
- * @property Task $task
+ * @property Task   $task
+ * @property string $defaultLogFile
  */
 class TaskRunner extends \yii\base\Component
 {
@@ -38,10 +39,21 @@ class TaskRunner extends \yii\base\Component
     /** @var ?string */
     private $defaultLogFile;
 
-    public function init()
+    /**
+     * @param string $fileName
+     */
+    public function setDefaultLogfile(string $fileName): void
     {
-        parent::init();
-        $this->defaultLogFile = Yii::$app->params['defaultSchedulerLogFile'] ?? null;
+        $this->defaultLogFile = $fileName;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getDefaultLogfile(): ?string
+    {
+        return $this->defaultLogFile;
     }
 
     /**
@@ -85,8 +97,8 @@ class TaskRunner extends \yii\base\Component
     public function runTask($forceRun = false): string
     {
         $task = $this->getTask();
-        $shouldRun = $task->shouldRun($forceRun, true);
-        if ($shouldRun === null) {
+        $obstacle = $task->shouldRun($forceRun, true);
+        if ($obstacle === null) {
             $event = new TaskEvent([
                 'task' => $task,
                 'success' => true,
@@ -113,10 +125,10 @@ class TaskRunner extends \yii\base\Component
                 $this->trigger(Task::EVENT_AFTER_RUN, $event);
             }
         } else {
-            $output = $shouldRun;
+            $this->error = $obstacle;
         }
         $task->getModel()->save();
-        return $output ?? 'Во время запуска задачи возникла ошибка. Подробнее смотрите в логе.';
+        return $output ?? 'An error occurred while starting the task. See the log for more details.';
     }
 
     /**
