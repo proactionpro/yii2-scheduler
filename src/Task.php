@@ -64,6 +64,8 @@ abstract class Task extends Component
      */
     private $_model;
 
+    public $logFile = null;
+
     public function init()
     {
         parent::init();
@@ -173,13 +175,13 @@ abstract class Task extends Component
 
         if ($withText) {
             if (!$model->active && !$forceRun) {
-                return 'Задача не активна.';
+                return 'Task is not active';
             }
             if (!((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue))) {
                 if ($isRunning) {
-                    return 'Задача была запущена и еще не завершилась. Дождитесь завершения задачи или истечения времени просрочки (' . $this->overdueThreshold . ')';
+                    return 'The task was launched and has not yet completed. Wait for the task to complete or overdue threshold to expire (' . $this->overdueThreshold . ')';
                 }
-                return 'Время запуска задачи еще не подошло.';
+                return 'The task launch is not due yet';
             }
             return null;
         }
