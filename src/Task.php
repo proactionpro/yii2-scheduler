@@ -161,19 +161,30 @@ abstract class Task extends Component
 
     /**
      * @param bool $forceRun
+     * @param bool $withText
      * @return bool
      */
-    public function shouldRun($forceRun = false)
+    public function shouldRun($forceRun = false, $withText = false)
     {
-        $model = $this->getModel();
-        $isDue = in_array($model->status_id, [SchedulerTask::STATUS_DUE, SchedulerTask::STATUS_OVERDUE, SchedulerTask::STATUS_ERROR]);
+        $model     = $this->getModel();
+        $isDue     = in_array($model->status_id, [SchedulerTask::STATUS_DUE, SchedulerTask::STATUS_OVERDUE, SchedulerTask::STATUS_ERROR]);
         $isRunning = $model->status_id == SchedulerTask::STATUS_RUNNING;
-        $overdue = false;
-        if((strtotime($model->started_at) + $this->overdueThreshold) <= strtotime("now")) {
-            $overdue = true;
+        $overdue   = (strtotime($model->started_at) + $this->overdueThreshold) <= time();
+
+        if ($withText) {
+            if (!$model->active && !$forceRun) {
+                return 'Задача не активна.';
+            }
+            if (!((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue))) {
+                if ($isRunning) {
+                    return 'Задача была запущена и еще не завершилась. Дождитесь завершения задачи или истечения времени просрочки (' . $this->overdueThreshold . ')';
+                }
+                return 'Время запуска задачи еще не подошло.';
+            }
+            return null;
         }
 
-        return ($model->active && ((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue)));
+        return (($model->active || $forceRun) && ((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue)));
     }
 
 }

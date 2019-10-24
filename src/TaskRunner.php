@@ -85,8 +85,8 @@ class TaskRunner extends \yii\base\Component
     public function runTask($forceRun = false): string
     {
         $task = $this->getTask();
-
-        if ($task->shouldRun($forceRun)) {
+        $shouldRun = $task->shouldRun($forceRun, true);
+        if ($shouldRun === null) {
             $event = new TaskEvent([
                 'task' => $task,
                 'success' => true,
@@ -112,9 +112,11 @@ class TaskRunner extends \yii\base\Component
                 }
                 $this->trigger(Task::EVENT_AFTER_RUN, $event);
             }
+        } else {
+            $output = $shouldRun;
         }
         $task->getModel()->save();
-        return $output ?? 'Задача не была запущена.';
+        return $output ?? 'Во время запуска задачи возникла ошибка. Подробнее смотрите в логе.';
     }
 
     /**
