@@ -18,7 +18,7 @@ class TaskRunner extends \yii\base\Component
 {
     /**
      * Indicates whether an error occured during the executing of the task.
-     * @var bool
+     * @var string
      */
     public $error;
 
@@ -160,24 +160,27 @@ class TaskRunner extends \yii\base\Component
 
     /**
      * @param string $output
-     * @throws Exception
      */
     public function log($output)
     {
         $model = $this->getTask()->getModel();
         $logFile = $model->log_file ?: $this->defaultLogFile;
         if ($logFile) {
-            if (!file_exists($logFile)) {
-                FileHelper::createDirectory(dirname($logFile), 0777);
-                if (touch($logFile)) {
-                    chmod($logFile, 0666);
+            try {
+                if (!file_exists($logFile)) {
+                    FileHelper::createDirectory(dirname($logFile), 0777);
+                    if (touch($logFile)) {
+                        chmod($logFile, 0666);
+                    }
                 }
-            }
-            if ($h = @fopen($logFile, 'a')) {
-                fwrite($h, $output . PHP_EOL);
-                fclose($h);
-            } else {
-                $output = 'Log file is not available or cannot be created.' . PHP_EOL . $output;
+                if ($h = @fopen($logFile, 'a')) {
+                    fwrite($h, $output . PHP_EOL);
+                    fclose($h);
+                } else {
+                    throw new Exception('Log file is not available or cannot be created.');
+                }
+            } catch (Exception $e) {
+                $output = $e->getMessage() . PHP_EOL . $output;
             }
         }
         $log = $this->getLog();
