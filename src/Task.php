@@ -64,6 +64,8 @@ abstract class Task extends Component
      */
     private $_model;
 
+    public $logFile = null;
+
     public function init()
     {
         parent::init();
@@ -72,7 +74,7 @@ abstract class Task extends Component
         \yii\base\Event::on(self::className(), self::EVENT_BEFORE_RUN, function ($event) use ($lockName) {
             /* @var $event TaskEvent */
             $db = \Yii::$app->db;
-            $result = $db->createCommand("GET_LOCK(:lockname, 1)", [':lockname' => $lockName])->queryScalar();
+            $result = $db->createCommand('GET_LOCK(:lockname, 1)', [':lockname' => $lockName])->queryScalar();
 
             if (!$result) {
                 // we didn't get the lock which means the task is still running
@@ -83,7 +85,7 @@ abstract class Task extends Component
             // release the lock
             /* @var $event TaskEvent */
             $db = \Yii::$app->db;
-            $db->createCommand("RELEASE_LOCK(:lockname, 1)", [':lockname' => $lockName])->queryScalar();
+            $db->createCommand('RELEASE_LOCK(:lockname, 1)', [':lockname' => $lockName])->queryScalar();
         });
     }
 
@@ -161,19 +163,30 @@ abstract class Task extends Component
 
     /**
      * @param bool $forceRun
+     * @param bool $withText
      * @return bool
      */
-    public function shouldRun($forceRun = false)
+    public function shouldRun($forceRun = false, $withText = false)
     {
-        $model = $this->getModel();
-        $isDue = in_array($model->status_id, [SchedulerTask::STATUS_DUE, SchedulerTask::STATUS_OVERDUE, SchedulerTask::STATUS_ERROR]);
+        $model     = $this->getModel();
+        $isDue     = in_array($model->status_id, [SchedulerTask::STATUS_DUE, SchedulerTask::STATUS_OVERDUE, SchedulerTask::STATUS_ERROR]);
         $isRunning = $model->status_id == SchedulerTask::STATUS_RUNNING;
-        $overdue = false;
-        if((strtotime($model->started_at) + $this->overdueThreshold) <= strtotime("now")) {
-            $overdue = true;
+        $overdue   = (strtotime($model->started_at) + $this->overdueThreshold) <= time();
+
+        if ($withText) {
+            if (!$model->active && !$forceRun) {
+                return 'Task is not active, use --force to run anyway';
+            }
+            if (!((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue))) {
+                if ($isRunning) {
+                    return 'The task was launched and has not yet completed. Wait for the task to complete or overdue threshold to expire (' . $this->overdueThreshold . ')';
+                }
+                return 'Task is not due, use --force to run anyway';
+            }
+            return null;
         }
 
-        return ($model->active && ((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue)));
+        return (($model->active || $forceRun) && ((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue)));
     }
 
 }

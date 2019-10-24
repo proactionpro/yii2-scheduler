@@ -5,39 +5,56 @@ use Yii;
 use proaction\scheduler\events\TaskEvent;
 use proaction\scheduler\models\SchedulerLog;
 use proaction\scheduler\models\SchedulerTask;
+use yii\base\Exception;
 use yii\helpers\FileHelper;
 
 /**
  * Class TaskRunner
  *
  * @package proaction\scheduler
- * @property \proaction\scheduler\Task $task
+ * @property Task   $task
+ * @property string $defaultLogFile
  */
 class TaskRunner extends \yii\base\Component
 {
-
     /**
      * Indicates whether an error occured during the executing of the task.
-     * @var bool
+     * @var string
      */
     public $error;
 
     /**
      * The task that will be executed.
      *
-     * @var \proaction\scheduler\Task
+     * @var Task
      */
     private $_task;
 
-    /**
-     * @var \proaction\scheduler\models\SchedulerLog
-     */
+    /** @var SchedulerLog */
     private $_log;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $running = false;
+
+    /** @var ?string */
+    private $defaultLogFile;
+
+    /**
+     * @param string $fileName
+     */
+    public function setDefaultLogfile(string $fileName): void
+    {
+        $this->defaultLogFile = $fileName;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getDefaultLogfile(): ?string
+    {
+        return $this->defaultLogFile;
+    }
 
     /**
      * @param Task $task
@@ -56,7 +73,7 @@ class TaskRunner extends \yii\base\Component
     }
 
     /**
-     * @param \proaction\scheduler\models\SchedulerLog $log
+     * @param SchedulerLog $log
      */
     public function setLog($log)
     {
@@ -74,12 +91,14 @@ class TaskRunner extends \yii\base\Component
     /**
      * @param bool $forceRun
      * @return string
+     * @throws Exception
+     * @throws \yii\db\Exception
      */
     public function runTask($forceRun = false): string
     {
         $task = $this->getTask();
-
-        if ($task->shouldRun($forceRun)) {
+        $obstacle = $task->shouldRun($forceRun, true);
+        if ($obstacle === null) {
             $event = new TaskEvent([
                 'task' => $task,
                 'success' => true,
@@ -105,9 +124,11 @@ class TaskRunner extends \yii\base\Component
                 }
                 $this->trigger(Task::EVENT_AFTER_RUN, $event);
             }
+        } else {
+            $this->error = $obstacle;
         }
         $task->getModel()->save();
-        return $output ?? 'error';
+        return $output ?? 'An error occurred while starting the task. See the log for more details.';
     }
 
     /**
@@ -128,6 +149,8 @@ class TaskRunner extends \yii\base\Component
      * @param $message
      * @param $file
      * @param $lineNumber
+     * @throws Exception
+     * @throws \yii\db\Exception
      */
     public function handleError($code, $message, $file, $lineNumber)
     {
@@ -143,7 +166,7 @@ class TaskRunner extends \yii\base\Component
 
         $output = ob_get_clean();
 
-        $this->error = true;
+        $this->error = $output;
         $this->log($output);
         $this->getTask()->getModel()->status_id = SchedulerTask::STATUS_ERROR;
         $this->getTask()->stop();
@@ -151,23 +174,27 @@ class TaskRunner extends \yii\base\Component
 
     /**
      * @param string $output
-     * @throws \yii\base\Exception
      */
     public function log($output)
     {
         $model = $this->getTask()->getModel();
-        if ($model->log_file) {
-            if (!file_exists($model->log_file)) {
-                FileHelper::createDirectory(dirname($model->log_file), 0777);
-                if (touch($model->log_file)) {
-                    chmod($model->log_file, 0666);
+        $logFile = $model->log_file ?: $this->defaultLogFile;
+        if ($logFile) {
+            try {
+                if (!file_exists($logFile)) {
+                    FileHelper::createDirectory(dirname($logFile), 0777);
+                    if (touch($logFile)) {
+                        chmod($logFile, 0666);
+                    }
                 }
-            }
-            if ($h = @fopen($model->log_file, 'a')) {
-                fwrite($h, $output . PHP_EOL);
-                fclose($h);
-            } else {
-                $output = 'Log file does not exist and cannot be created.' . PHP_EOL . $output;
+                if ($h = @fopen($logFile, 'a')) {
+                    fwrite($h, $output . PHP_EOL);
+                    fclose($h);
+                } else {
+                    throw new Exception('Log file is not available or cannot be created.');
+                }
+            } catch (Exception $e) {
+                $output = $e->getMessage() . PHP_EOL . $output;
             }
         }
         $log = $this->getLog();

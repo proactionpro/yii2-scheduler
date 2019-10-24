@@ -2,7 +2,7 @@
 
 namespace proaction\scheduler\models;
 
-use Yii;
+use yii\db\ActiveRecord;
 use yii\helpers\Console;
 use yii\helpers\Inflector;
 
@@ -58,7 +58,7 @@ class SchedulerTask extends \proaction\scheduler\models\base\SchedulerTask
 
     /**
      * @param $task
-     * @return array|null|SchedulerTask|\yii\db\ActiveRecord
+     * @return array|null|SchedulerTask|ActiveRecord
      */
     public static function createTaskModel($task)
     {
@@ -75,7 +75,7 @@ class SchedulerTask extends \proaction\scheduler\models\base\SchedulerTask
             $model->status_id = self::STATUS_PENDING;
             $model->description = $task->description;
             $model->schedule = $task->schedule;
-            $model->log_file = $task->log_file;
+            $model->log_file = $task->logFile;
         }
         $model->save(false);
         return $model;
