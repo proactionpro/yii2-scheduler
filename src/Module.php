@@ -3,9 +3,14 @@ namespace proaction\scheduler;
 
 use proaction\scheduler\models\SchedulerLog;
 use Yii;
+use yii\base\Application;
 use yii\base\BootstrapInterface;
 use proaction\scheduler\models\SchedulerTask;
+use yii\base\ErrorException;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
+use proaction\scheduler\console\SchedulerController;
 
 /**
  * Class Module
@@ -27,7 +32,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
     /**
      * Bootstrap the console controllers.
-     * @param \yii\base\Application $app
+     * @param Application $app
      */
     public function bootstrap($app)
     {
@@ -35,7 +40,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
         if ($app instanceof \yii\console\Application && !isset($app->controllerMap[$this->id])) {
             $app->controllerMap[$this->id] = [
-                'class' => 'proaction\scheduler\console\SchedulerController',
+                'class' => SchedulerController::class,
             ];
         }
     }
@@ -45,14 +50,16 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * creates a new instance of each class and appends it to an array, which it returns.
      *
      * @return Task[]
-     * @throws \yii\base\ErrorException
+     * @throws ErrorException
+     * @throws InvalidConfigException
+     * @throws StaleObjectException
      */
     public function getTasks()
     {
         $dir = Yii::getAlias($this->taskPath);
 
         if (!is_readable($dir)) {
-            throw new \yii\base\ErrorException("Task directory ($dir) does not exist");
+            throw new ErrorException("Task directory ($dir) does not exist");
         }
 
         $files = array_diff(scandir($dir), array('..', '.'));
@@ -77,10 +84,11 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * Removes any records of tasks that no longer exist.
      *
      * @param Task[] $tasks
+     * @throws StaleObjectException
      */
     public function cleanTasks($tasks)
     {
-        $currentTasks = ArrayHelper::map($tasks, function ($task) {
+        $currentTasks = ArrayHelper::map($tasks, static function ($task) {
             return $task->getName();
         }, 'description');
 
@@ -98,7 +106,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
      *
      * @param $className
      * @return null|object
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function loadTask($className)
     {

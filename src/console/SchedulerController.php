@@ -5,9 +5,11 @@ namespace proaction\scheduler\console;
 use proaction\scheduler\events\SchedulerEvent;
 use proaction\scheduler\models\base\SchedulerLog;
 use proaction\scheduler\models\SchedulerTask;
+use proaction\scheduler\Module;
 use proaction\scheduler\Task;
 use proaction\scheduler\TaskRunner;
 use Yii;
+use yii\base\Exception;
 use yii\base\InvalidParamException;
 use yii\console\Controller;
 use yii\helpers\Console;
@@ -66,7 +68,7 @@ class SchedulerController extends Controller
     }
 
     /**
-     * @return \proaction\scheduler\Module
+     * @return Module
      */
     private function getScheduler()
     {
@@ -89,7 +91,7 @@ class SchedulerController extends Controller
                 "%s\t%s\t%s\t%s\t%s",
                 $model->name,
                 $model->schedule,
-                is_null($model->last_run) ? 'NULL' : $model->last_run,
+                $model->last_run ?? 'NULL',
                 $model->next_run,
                 $model->getStatus()
             );
@@ -158,18 +160,21 @@ class SchedulerController extends Controller
 
     /**
      * @param Task $task
+     * @throws Exception
+     * @throws \yii\db\Exception
      */
     private function runTask(Task $task)
     {
-        echo sprintf("\tRunning %s...", $task->getName());
+        echo sprintf("\tRunning %s... ", $task->getName());
         if ($task->shouldRun($this->force)) {
             $runner = new TaskRunner();
             $runner->setTask($task);
             $runner->setLog(new SchedulerLog());
             $runner->runTask($this->force);
-            echo $runner->error ? 'error' : 'done'.PHP_EOL;
+            echo $runner->error ?: 'Done';
         } else {
-            echo "Task is not due, use --force to run anyway".PHP_EOL;
+            echo 'Task is not due, use --force to run anyway';
         }
+        echo PHP_EOL;
     }
 }
